@@ -1,0 +1,45 @@
+{
+    "items": [
+        {
+            "name": "Kindle Copyparty (no kterm!)",
+            "if": "\"kterm\" -ext!",
+            "items": [
+                {
+                    "name": "Install kterm extension (required)",
+                    "action": "sh get_kterm_fbink.sh"
+                }
+            ]
+        },
+        {
+            "name": "Kindle Copyparty",
+            "if": "\"kterm\" -ext",
+            "items": [
+                {
+                    "name": "Deploy newest release ",
+                    "action": "sh deploy_kterm.sh",
+                    "exitmenu": false
+                },
+                {
+                    "name": "Start ",
+                    "action": "sh start_kindle_copyparty.sh",
+                    "exitmenu": false
+                },
+                {
+                    "name": "Drop into ",
+                    "action": "sh drop_into_copyparty.sh",
+                    "exitmenu": false
+                },
+                {
+                    "name": "Delete",
+                    "action": "sh delete_kterm.sh",
+                    "exitmenu": false
+                },
+                {
+                    "name": "Update this Launcher",
+                    "action": "sh update_kterm.sh"
+                    "exitmenu": false
+                }
+            ]
+        }
+    ]
+}
