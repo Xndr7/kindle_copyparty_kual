@@ -7,7 +7,7 @@ PROGRESS="0"
 KBYTES_EXTRACTED="0"
 KBYTES_EXTRACTED_OLD="1"
 while [ "$PROGRESS" -lt "99" ] ; do
-	KBYTES_EXTRACTED="$(cd /mnt/us/extensions/kindle_copyparty && du -k -c kindle_copyparty.ext3 kindle_copyparty.sh kindle_copyparty.conf | grep total | tail -1 | cut -d$'\t' -f1)"
+	KBYTES_EXTRACTED="$(cd /mnt/us/extensions/kindle_copyparty && du -k -c kindle_copyparty.ext3 kindle_copyparty.sh start_kindle_copyparty.sh kindle_copyparty.conf | grep total | tail -1 | cut -d$'\t' -f1)"
 	if [ "$KBYTES_EXTRACTED" == "$KBYTES_EXTRACTED_OLD" ] ; then # unzipping process stopped
 		break
 	fi
