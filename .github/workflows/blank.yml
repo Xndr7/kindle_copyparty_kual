@@ -1,0 +1,65 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Create zip 
+        run: |
+          FILE_NAME="kindle_copyparty_kual" 
+          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+          sudo mv alpine_kindle_kual kindle_copyparty_kual
+          sudo zip "$FILE_NAME".zip -r kindle_copyparty_kual
+
+      - name: Create GitHub Release and Upload Zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token to authenticate API request
+        run: |
+          TAG_NAME="v$(date +'%Y.%m%d.%H%M%S')"  # Generate a version tag based on date-time
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+          echo $TAG_NAME
+          REPO="${{ github.repository }}" 
+          echo "$REPO"
+          echo "tag name is: $TAG_NAME" 
+          RESPONSE=$(curl -s -X POST "https://api.github.com/repos/${REPO}/releases" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -d @- <<EOF
+          {
+            "tag_name": "$TAG_NAME",
+            "name": "$TAG_NAME"
+          }
+          EOF
+          )
+
+          echo "$RESPONSE" 
+
+          UPLOAD_URL=$(echo "$RESPONSE" | jq -r .upload_url | sed -e 's/{?name,label}//')
+          echo "$UPLOAD_URL" 
+
+          # Upload the release asset (the zip file)
+          curl -X POST --data-binary @$FILE_NAME.zip\
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Content-Type: application/zip" \
+            "$UPLOAD_URL?name=$FILE_NAME.zip"
