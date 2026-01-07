@@ -36,7 +36,7 @@
                 },
                 {
                     "name": "Update this Launcher",
-                    "action": "sh update_kterm.sh"
+                    "action": "sh update_kterm.sh", 
                     "exitmenu": false
                 }
             ]
