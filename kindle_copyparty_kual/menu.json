@@ -25,6 +25,11 @@
                     "exitmenu": false
                 },
                 {
+                    "name": "Start (W/Tailscale) ",
+                    "action": "sh start_kindle_copyparty_w_tailscale.sh",
+                    "exitmenu": false
+                },
+                {
                     "name": "Drop into ",
                     "action": "sh drop_into_copyparty.sh",
                     "exitmenu": false
